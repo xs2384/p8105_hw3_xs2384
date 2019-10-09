@@ -22,3 +22,12 @@ most_aisle_id = df_most_item_aisle$aisle_id[which(df_most_item_aisle$n==max(most
 most_aisle_name = filter(instacart, aisle_id == most_aisle_id)[["aisle"]][1]
 ```
 
+```{r}
+df_item_aisles = instacart %>% group_by(aisle) %>% summarize(n=n()) 
+item_plot = filter(df_item_aisles, n>10000) %>% mutate( 
+  aisle= as.ordered(aisle)
+  )
+ggplot(item_plot, aes(x= aisle, y= n )) + geom_bar(stat = "identity")+ ylab("number in aisles") + coord_flip() +
+  scale_x_discrete(limits = rev(levels(item_plot$aisle)))
+```
+
