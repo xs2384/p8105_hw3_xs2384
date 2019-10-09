@@ -1,28 +1,24 @@
 ---
 title: "HW3"
-output: html_document
+output: github_document
+author: Xinyu Shen
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+
+```{r}
+library(tidyverse)
+library(p8105.datasets)
+data("instacart")
+
 ```
 
-## R Markdown
+The dataset instacart has dimention of `r dim(instacart)[1]` X `r dim(instacart)[2]`. It has `r dim(instacart)[1]` variables, which are `r names(instacart)`. The key variables is the product_name, which help us to locate the product we want. The product_id variable can help us easily count how many such products were purchased, so it is important as well. For example, if the seller want to know how popular the spring water is, the seller can use the product name to locate the product and get its product id. Then the seller can count how many times this product id shows in the datasets, to know how popular the product is. 
 
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+aisles_count = length(unique(pull(instacart, "aisle")))
+df_most_item_aisle = instacart %>% group_by(aisle_id) %>% summarize(n=n()) 
+most_item_aisle=max(df_most_item_aisle$n)
+most_aisle_id = df_most_item_aisle$aisle_id[which(df_most_item_aisle$n==max(most_item_aisle))]
+most_aisle_name = filter(instacart, aisle_id == most_aisle_id)[["aisle"]][1]
 ```
 
-## Including Plots
-
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
-```
-
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
