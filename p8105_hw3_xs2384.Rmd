@@ -36,4 +36,10 @@ ggplot(item_plot, aes(x= aisle, y= n )) + geom_bar(stat = "identity")+ ylab("num
 df_three_most = instacart %>% filter(aisle %in% c("baking ingredients", "dog food care","packaged vegetables fruits")) %>% group_by(aisle, product_name) %>% summarize(num_times=n()) %>% arrange(-num_times, .by_group = TRUE) %>% top_n(3)
 df_three_most
 ```
+```{r}
+df_p_c = instacart %>% filter(product_name %in% c('Pink Lady Apples', 'Coffee Ice Cream')) %>% select(product_name,order_dow, order_hour_of_day) %>% group_by(product_name, order_dow) %>% summarize(mean = mean(order_hour_of_day)) %>% pivot_wider(names_from = order_dow, values_from = mean) 
+df_p_c
+```
+
+
 
