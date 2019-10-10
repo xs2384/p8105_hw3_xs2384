@@ -32,7 +32,8 @@ ggplot(item_plot, aes(x= aisle, y= n )) + geom_bar(stat = "identity")+ ylab("num
 ```
 
 
-```{r}
+```{r, message=FALSE, warning=FALSE}
 df_three_most = instacart %>% filter(aisle %in% c("baking ingredients", "dog food care","packaged vegetables fruits")) %>% group_by(aisle, product_name) %>% summarize(num_times=n()) %>% arrange(-num_times, .by_group = TRUE) %>% top_n(3)
+df_three_most
 ```
 
