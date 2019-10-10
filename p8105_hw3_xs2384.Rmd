@@ -4,6 +4,7 @@ output: github_document
 author: Xinyu Shen
 ---
 
+##Problem 1
 
 ```{r}
 library(tidyverse)
@@ -41,11 +42,13 @@ df_p_c = instacart %>% filter(product_name %in% c('Pink Lady Apples', 'Coffee Ic
 df_p_c
 ```
 
+## Problem 2
+
 ```{r}
 data("brfss_smart2010") 
 df_ptwo = brfss_smart2010 %>% janitor::clean_names() %>% select("state" = locationabbr, "county" = locationdesc, everything()) %>% filter(topic == "Overall Health") %>% mutate(
   response = factor(response, levels = rev(unique(response)))
-)
+) %>% arrange(desc(response), .by_group = TRUE)
 
 df_2002 = filter(df_ptwo, year == 2002) %>% group_by(state,county) %>% summarize(obs_n = n()) %>% select(state,county) %>% ungroup() %>% group_by(state) %>% summarize(n=n())%>% filter(n >= 7)
 df_2010 = filter(df_ptwo, year == 2010) %>% group_by(state,county) %>% summarize(obs_n = n()) %>% select(state,county) %>% ungroup() %>% group_by(state) %>% summarize(n=n())%>% filter(n >= 7)
@@ -53,7 +56,7 @@ df_2002
 df_2010
 ```
 
-In 2002, `r df_2002[["state"]]` were observed 7 or more locations, and in 2010, `r df_2010[["state"]]` were observed 7 or more locations. 
+In 2002, `r df_2002[["state"]]` were observed 7 or more locations, and in 2010, `r df_2010[["state"]]` were observed 7 or more locations. Compared to 2002, more states have 7 or more location observed. 
 
 ```{r, warning=FALSE, message=FALSE}
 df_pthree = df_ptwo %>% filter(response == "Excellent") %>% group_by(year, state) %>% summarize(data_mean = mean(data_value)) %>% ungroup()
@@ -61,4 +64,16 @@ df_pthree = df_ptwo %>% filter(response == "Excellent") %>% group_by(year, state
 ggplot(df_pthree, aes(x= year, y= data_mean)) + geom_line(aes(color = state))
 
 ```
+Based on the plot, most states' data were ranged between 17.5 to 27.5, showing that the data were not changed significantly. 
+
+```{r}
+library(patchwork)
+df_pthree_2006 = df_ptwo %>% filter(year == 2006 & state == "NY")
+df_pthree_2010 = df_ptwo %>% filter(year == 2010 & state == "NY")
+plot_06 = ggplot(df_pthree_2006, aes(x=response, y= data_value)) + geom_line(aes(color = county, group=county))+ggtitle("2006")
+plot_10 = ggplot(df_pthree_2010, aes(x=response, y= data_value)) + geom_line(aes(color = county, group=county)) + ggtitle("2010")
+plot_06 / plot_10
+```
+
+From the plot, we can see that better the response is, higher the data value. 
 
