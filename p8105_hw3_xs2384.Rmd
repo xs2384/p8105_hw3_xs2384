@@ -41,5 +41,24 @@ df_p_c = instacart %>% filter(product_name %in% c('Pink Lady Apples', 'Coffee Ic
 df_p_c
 ```
 
+```{r}
+data("brfss_smart2010") 
+df_ptwo = brfss_smart2010 %>% janitor::clean_names() %>% select("state" = locationabbr, "county" = locationdesc, everything()) %>% filter(topic == "Overall Health") %>% mutate(
+  response = factor(response, levels = rev(unique(response)))
+)
 
+df_2002 = filter(df_ptwo, year == 2002) %>% group_by(state,county) %>% summarize(obs_n = n()) %>% select(state,county) %>% ungroup() %>% group_by(state) %>% summarize(n=n())%>% filter(n >= 7)
+df_2010 = filter(df_ptwo, year == 2010) %>% group_by(state,county) %>% summarize(obs_n = n()) %>% select(state,county) %>% ungroup() %>% group_by(state) %>% summarize(n=n())%>% filter(n >= 7)
+df_2002
+df_2010
+```
+
+In 2002, `r df_2002[["state"]]` were observed 7 or more locations, and in 2010, `r df_2010[["state"]]` were observed 7 or more locations. 
+
+```{r, warning=FALSE, message=FALSE}
+df_pthree = df_ptwo %>% filter(response == "Excellent") %>% group_by(year, state) %>% summarize(data_mean = mean(data_value)) %>% ungroup()
+
+ggplot(df_pthree, aes(x= year, y= data_mean)) + geom_line(aes(color = state))
+
+```
 
