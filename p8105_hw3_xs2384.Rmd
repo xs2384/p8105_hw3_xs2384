@@ -64,6 +64,7 @@ df_pthree = df_ptwo %>% filter(response == "Excellent") %>% group_by(year, state
 ggplot(df_pthree, aes(x= year, y= data_mean)) + geom_line(aes(color = state))
 
 ```
+
 Based on the plot, most states' data were ranged between 17.5 to 27.5, showing that the data were not changed significantly. 
 
 ```{r}
