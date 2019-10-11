@@ -77,3 +77,35 @@ plot_06 / plot_10
 
 From the plot, we can see that better the response is, higher the data value. 
 
+## Problem 3
+
+```{r, warning=FALSE, message=FALSE}
+df_acc = read_csv("./accel_data.csv") %>% janitor::clean_names() %>% pivot_longer(
+  cols = starts_with("act") ,
+  names_to = "visit",
+  values_to = "activity_count") %>% mutate(
+    wk_wek = ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday")
+  )
+```
+The dataset exits the variables such as `r names(df_acc)`, and has dimention of `r dim(df_acc)[1]` X `r dim(df_acc)[2]`, which contains `r nrow(df_acc)` observations. 
+
+```{r}
+week_order = c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")
+df_total_ac = df_acc %>% group_by(week, day) %>% summarize(sum = sum(activity_count)) %>% ungroup() %>% mutate(
+  wd_wk = ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday"),
+  day = factor(day, levels = week_order)
+  )
+df_total_ac
+```
+
+
+```{r}
+ggplot(df_total_ac, aes(x=week, y = sum, fill = day)) + geom_bar(stat = 'identity', position = position_dodge())
+```
+
+From the plot, we can see that for the week 1,2 and 5, the activity total is increasing from Monday to Sunday. And in the week 3, Monday has significantly higher activity than other day and in week 4, Sunday has very low activity. And for week 4 and 5, in the Saturday, there is almost no activity for those two days. 
+
+```{r}
+
+```
+
