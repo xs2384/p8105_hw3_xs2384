@@ -23,6 +23,8 @@ most_aisle_id = df_most_item_aisle$aisle_id[which(df_most_item_aisle$n==max(most
 most_aisle_name = filter(instacart, aisle_id == most_aisle_id)[["aisle"]][1]
 ```
 
+There are `r aisles_count` in the dataset, and `r most_aisle_name` is the most items ordered from. 
+
 ```{r}
 df_item_aisles = instacart %>% group_by(aisle) %>% summarize(n=n()) 
 item_plot = filter(df_item_aisles, n>10000) %>% mutate( 
@@ -87,6 +89,7 @@ df_acc = read_csv("./accel_data.csv") %>% janitor::clean_names() %>% pivot_longe
   values_to = "activity_count") %>% mutate(
     wk_wek = ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday")
   )
+df_acc
 ```
 The dataset exits the variables such as `r names(df_acc)`, and has dimention of `r dim(df_acc)[1]` X `r dim(df_acc)[2]`, which contains `r nrow(df_acc)` observations. 
 
