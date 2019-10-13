@@ -37,11 +37,11 @@ ggplot(item_plot, aes(x= aisle, y= n )) + geom_bar(stat = "identity")+ ylab("num
 
 ```{r, message=FALSE, warning=FALSE}
 df_three_most = instacart %>% filter(aisle %in% c("baking ingredients", "dog food care","packaged vegetables fruits")) %>% group_by(aisle, product_name) %>% summarize(num_times=n()) %>% arrange(-num_times, .by_group = TRUE) %>% top_n(3)
-df_three_most
+knitr::kable(df_three_most)  
 ```
 ```{r}
 df_p_c = instacart %>% filter(product_name %in% c('Pink Lady Apples', 'Coffee Ice Cream')) %>% select(product_name,order_dow, order_hour_of_day) %>% group_by(product_name, order_dow) %>% summarize(mean = mean(order_hour_of_day)) %>% pivot_wider(names_from = order_dow, values_from = mean) 
-df_p_c
+knitr::kable(df_p_c)
 ```
 
 ## Problem 2
@@ -54,8 +54,8 @@ df_ptwo = brfss_smart2010 %>% janitor::clean_names() %>% select("state" = locati
 
 df_2002 = filter(df_ptwo, year == 2002) %>% group_by(state,county) %>% summarize(obs_n = n()) %>% select(state,county) %>% ungroup() %>% group_by(state) %>% summarize(n=n())%>% filter(n >= 7)
 df_2010 = filter(df_ptwo, year == 2010) %>% group_by(state,county) %>% summarize(obs_n = n()) %>% select(state,county) %>% ungroup() %>% group_by(state) %>% summarize(n=n())%>% filter(n >= 7)
-df_2002
-df_2010
+knitr::kable(df_2002)
+knitr::kable(df_2010)
 ```
 
 In 2002, `r df_2002[["state"]]` were observed 7 or more locations, and in 2010, `r df_2010[["state"]]` were observed 7 or more locations. Compared to 2002, more states have 7 or more location observed. 
@@ -89,9 +89,11 @@ df_acc = read_csv("./accel_data.csv") %>% janitor::clean_names() %>% pivot_longe
   values_to = "activity_count") %>% mutate(
     wk_wek = ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday")
   )
-df_acc
+knitr::kable(head(df_acc,10))
 ```
-The dataset exits the variables such as `r names(df_acc)`, and has dimention of `r dim(df_acc)[1]` X `r dim(df_acc)[2]`, which contains `r nrow(df_acc)` observations. 
+
+
+The dataset exists the variables such as `r names(df_acc)`, and has dimention of `r dim(df_acc)[1]` X `r dim(df_acc)[2]`, which contains `r nrow(df_acc)` observations. 
 
 ```{r}
 week_order = c("Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday")
@@ -99,7 +101,7 @@ df_total_ac = df_acc %>% group_by(week, day) %>% summarize(sum = sum(activity_co
   wd_wk = ifelse(day == "Saturday" | day == "Sunday", "weekend", "weekday"),
   day = factor(day, levels = week_order)
   )
-df_total_ac
+knitr::kable(head(df_total_ac,10))
 ```
 
 
